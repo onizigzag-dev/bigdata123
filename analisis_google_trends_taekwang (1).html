@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Trends — PT TKG Taekwang Indonesia 2024–2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F5F3EF;
+    --surface: #FFFFFF;
+    --surface-2: #F0EDE8;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.14);
+    --text-primary: #1A1917;
+    --text-secondary: #6B6860;
+    --text-muted: #9E9C97;
+    --blue: #3266AD;
+    --blue-light: #E8F0FB;
+    --teal: #1D9E75;
+    --teal-light: #E2F5EE;
+    --amber: #BA7517;
+    --amber-light: #FAF0DC;
+    --red: #D94F4F;
+    --red-light: #FCEAEA;
+    --green-text: #2D6B0F;
+    --green-bg: #EBF5DC;
+--font: 'Poppins', sans-serif;
+    --mono: 'Poppins', monospace;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow: 0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(245,243,239,0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; }
+  .nav-logo {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: var(--blue); display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .nav-title { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link {
+    font-size: 13px; color: var(--text-secondary); padding: 6px 12px;
+    border-radius: 8px; text-decoration: none; transition: all 0.15s;
+  }
+  .nav-link:hover { background: var(--surface-2); color: var(--text-primary); }
+  .nav-badge {
+    font-size: 11px; font-family: var(--mono);
+    background: var(--blue-light); color: var(--blue);
+    padding: 3px 10px; border-radius: 20px; font-weight: 500;
+  }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 64px 24px 48px;
+    max-width: 1080px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 32px; align-items: end;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 12px; font-weight: 500; color: var(--blue);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    background: var(--blue-light); padding: 5px 12px;
+    border-radius: 20px; margin-bottom: 16px;
+  }
+  .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+  .hero h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 300; line-height: 1.2; color: var(--text-primary); margin-bottom: 12px; }
+  .hero h1 strong { font-weight: 500; }
+  .hero-sub { font-size: 15px; color: var(--text-secondary); max-width: 540px; }
+  .hero-meta { text-align: right; }
+  .hero-date { font-size: 12px; font-family: var(--mono); color: var(--text-muted); }
+  .hero-period { font-size: 22px; font-weight: 500; color: var(--text-primary); font-family: var(--mono); }
+  @media (max-width: 640px) {
+    .hero { grid-template-columns: 1fr; gap: 20px; padding: 40px 20px 32px; }
+    .hero-meta { text-align: left; }
+  }
+
+  /* ── SECTION TITLES ── */
+  .section { padding: 0 24px 48px; max-width: 1080px; margin: 0 auto; }
+  .section-head {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num { font-size: 11px; font-family: var(--mono); color: var(--text-muted); min-width: 24px; }
+  .section-title { font-size: 13px; font-weight: 500; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.06em; }
+  .section-line { flex: 1; }
+
+  /* ── METRIC GRID ── */
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 48px; }
+  .metric-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .metric-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .metric-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  }
+  .metric-card:nth-child(1)::after { background: var(--blue); }
+  .metric-card:nth-child(2)::after { background: var(--teal); }
+  .metric-card:nth-child(3)::after { background: var(--amber); }
+  .metric-card:nth-child(4)::after { background: var(--teal); }
+  .metric-card:nth-child(5)::after { background: var(--red); }
+  .metric-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.4; }
+  .metric-value { font-size: 28px; font-weight: 500; color: var(--text-primary); line-height: 1; margin-bottom: 6px; font-family: var(--mono); }
+  .metric-sub { font-size: 11px; color: var(--text-muted); }
+
+  /* ── PANEL ── */
+  .panel {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .panel-header {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+  .panel-title { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .panel-body { padding: 20px 24px; }
+
+  /* ── TABS ── */
+  .tab-bar { display: flex; gap: 4px; background: var(--surface-2); padding: 3px; border-radius: 10px; width: fit-content; }
+  .tab-btn {
+    font-size: 13px; padding: 6px 16px;
+    border-radius: 8px; border: none;
+    background: transparent; color: var(--text-secondary);
+    cursor: pointer; font-family: var(--font); transition: all 0.15s;
+  }
+  .tab-btn.active { background: var(--surface); color: var(--text-primary); font-weight: 500; box-shadow: var(--shadow-sm); }
+
+  /* ── SIGNAL BARS ── */
+  .signal-list { display: flex; flex-direction: column; }
+  .signal-bar { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .signal-bar:last-child { border-bottom: none; }
+  .signal-rank { font-size: 11px; font-family: var(--mono); color: var(--text-muted); min-width: 20px; }
+  .signal-label { font-size: 13px; color: var(--text-primary); flex: 1.2; min-width: 0; }
+  .signal-track { flex: 2; height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+  .signal-fill { height: 100%; border-radius: 3px; transition: width 1s cubic-bezier(0.16, 1, 0.3, 1); }
+  .signal-val { font-size: 12px; font-family: var(--mono); color: var(--text-secondary); min-width: 36px; text-align: right; }
+  .badge { display: inline-flex; align-items: center; font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 500; white-space: nowrap; gap: 4px; }
+  .badge-up { background: var(--green-bg); color: var(--green-text); }
+  .badge-stable { background: var(--blue-light); color: var(--blue); }
+  .badge-new { background: var(--amber-light); color: var(--amber); }
+  @media (max-width: 480px) {
+    .signal-label { font-size: 12px; }
+    .signal-track { flex: 1.5; }
+  }
+
+  /* ── CHART CONTAINER ── */
+  .chart-wrap { position: relative; width: 100%; }
+
+  /* ── LEGEND ── */
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 12px; color: var(--text-secondary); align-items: center; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .legend-line { width: 20px; height: 2px; background: #9E9C97; flex-shrink: 0; }
+
+  /* ── INSIGHT GRID ── */
+  .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .insight-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .insight-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .insight-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; margin-bottom: 14px;
+  }
+  .ic-green { background: var(--green-bg); }
+  .ic-blue  { background: var(--blue-light); }
+  .ic-amber { background: var(--amber-light); }
+  .ic-gray  { background: var(--surface-2); border: 1px solid var(--border); }
+  .ic-teal  { background: var(--teal-light); }
+  .insight-title { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 8px; }
+  .insight-body { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+
+  /* ── RISK CARDS ── */
+  .risk-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 500px) { .risk-cols { grid-template-columns: 1fr; } }
+  .risk-card { border-radius: var(--radius-lg); padding: 18px 20px; }
+  .risk-pos { background: var(--green-bg); border: 1px solid rgba(45,107,15,0.15); }
+  .risk-neg { background: var(--red-light); border: 1px solid rgba(217,79,79,0.15); }
+  .risk-head { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .risk-head-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .risk-head-dot-pos { background: var(--green-text); }
+  .risk-head-dot-neg { background: var(--red); }
+  .risk-head-label { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+  .risk-head-label-pos { color: var(--green-text); }
+  .risk-head-label-neg { color: var(--red); }
+  .risk-item { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; font-size: 13px; }
+  .risk-item-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+  .risk-item-text-pos { color: #2D6B0F; }
+  .risk-item-text-neg { color: #993030; }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 24px; padding: 32px 24px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .footer-inner { max-width: 1080px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .footer-left { font-size: 13px; color: var(--text-secondary); }
+  .footer-left strong { color: var(--text-primary); font-weight: 500; }
+  .footer-right { font-size: 12px; font-family: var(--mono); color: var(--text-muted); }
+
+  /* ── PRINT ── */
+  @media print {
+    nav { display: none; }
+    body { background: #fff; }
+    .metric-card, .panel, .insight-card { box-shadow: none; border: 1px solid #ddd; }
+    .metric-card:hover, .insight-card:hover { transform: none; }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp 0.5s ease both; }
+  .fade-up-1 { animation-delay: 0.05s; }
+  .fade-up-2 { animation-delay: 0.10s; }
+  .fade-up-3 { animation-delay: 0.15s; }
+  .fade-up-4 { animation-delay: 0.20s; }
+  .fade-up-5 { animation-delay: 0.25s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+    </div>
+    <span class="nav-title">Taekwang Trends Report</span>
+  </div>
+  <div class="nav-links">
+    <a class="nav-link" href="#ringkasan">Ringkasan</a>
+    <a class="nav-link" href="#pencarian">Pencarian</a>
+    <a class="nav-link" href="#makro">Makro</a>
+    <a class="nav-link" href="#sinyal">Sinyal</a>
+    <a class="nav-link" href="#risiko">Risiko</a>
+  </div>
+  <span class="nav-badge">2024 – 2026</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero fade-up">
+  <div>
+    <div class="hero-eyebrow">
+      <span class="hero-eyebrow-dot"></span>
+      Google Trends Analysis
+    </div>
+    <h1>Lowongan Kerja<br><strong>PT TKG Taekwang Indonesia</strong></h1>
+    <p class="hero-sub">Analisis tren pencarian, industri sepatu, dan dinamika pasar kerja Jawa Barat periode 2024–2026.</p>
+  </div>
+  <div class="hero-meta">
+    <div class="hero-date">Periode laporan</div>
+    <div class="hero-period">2024–2026</div>
+  </div>
+</div>
+
+<!-- SECTION 1: RINGKASAN -->
+<div class="section" id="ringkasan">
+  <div class="section-head">
+    <span class="section-num">01</span>
+    <span class="section-title">Ringkasan sinyal tren</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric-card fade-up fade-up-1">
+      <p class="metric-label">Volume pencarian<br>"loker Subang"</p>
+      <p class="metric-value">Tinggi</p>
+      <p class="metric-sub">Konsisten sepanjang 2024–2026</p>
+    </div>
+    <div class="metric-card fade-up fade-up-2">
+      <p class="metric-label">Pertumbuhan CAGR<br>sepatu olahraga</p>
+      <p class="metric-value">13,1%</p>
+      <p class="metric-sub">5 tahun terakhir (BPS 2025)</p>
+    </div>
+    <div class="metric-card fade-up fade-up-3">
+      <p class="metric-label">PMI manufaktur<br>Indonesia Jan 2026</p>
+      <p class="metric-value">52,6</p>
+      <p class="metric-sub">Ekspansi 6 bulan berturut-turut</p>
+    </div>
+    <div class="metric-card fade-up fade-up-4">
+      <p class="metric-label">Ekspor sepatu<br>Jan–Apr 2025</p>
+      <p class="metric-value">$1,39M</p>
+      <p class="metric-sub">+11,8% vs periode sama 2024</p>
+    </div>
+    <div class="metric-card fade-up fade-up-5">
+      <p class="metric-label">Pengangguran<br>Cirebon 2024</p>
+      <p class="metric-value">84.990</p>
+      <p class="metric-sub">Turun dari 91.266 di 2023</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: PENCARIAN -->
+<div class="section" id="pencarian">
+  <div class="section-head">
+    <span class="section-num">02</span>
+    <span class="section-title">Estimasi popularitas pencarian</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Indeks Google Trends proxy — Indonesia (skala 0–100)</span>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(event,'keyword')">Per kata kunci</button>
+        <button class="tab-btn" onclick="switchTab(event,'temporal')">Pola temporal</button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div id="tab-keyword">
+        <div class="signal-list">
+          <div class="signal-bar">
+            <span class="signal-rank">01</span>
+            <span class="signal-label">loker Subang</span>
+            <div class="signal-track"><div class="signal-fill" style="width:88%;background:#3266AD;"></div></div>
+            <span class="signal-val">~88</span>
+            <span class="badge badge-up">↑ Naik</span>
+          </div>
+          <div class="signal-bar">
+            <span class="signal-rank">02</span>
+            <span class="signal-label">operator produksi</span>
+            <div class="signal-track"><div class="signal-fill" style="width:82%;background:#3266AD;"></div></div>
+            <span class="signal-val">~82</span>
+            <span class="badge badge-up">↑ Naik</span>
+          </div>
+          <div class="signal-bar">
+            <span class="signal-rank">03</span>
+            <span class="signal-label">loker Cirebon pabrik</span>
+            <div class="signal-track"><div class="signal-fill" style="width:74%;background:#1D9E75;"></div></div>
+            <span class="signal-val">~74</span>
+            <span class="badge badge-up">↑ Meningkat</span>
+          </div>
+          <div class="signal-bar">
+            <span class="signal-rank">04</span>
+            <span class="signal-label">TKG Taekwang Indonesia</span>
+            <div class="signal-track"><div class="signal-fill" style="width:65%;background:#1D9E75;"></div></div>
+            <span class="signal-val">~65</span>
+            <span class="badge badge-stable">— Stabil</span>
+          </div>
+          <div class="signal-bar">
+            <span class="signal-rank">05</span>
+            <span class="signal-label">lowongan kerja pabrik sepatu</span>
+            <div class="signal-track"><div class="signal-fill" style="width:60%;background:#BA7517;"></div></div>
+            <span class="signal-val">~60</span>
+            <span class="badge badge-stable">— Stabil</span>
+          </div>
+          <div class="signal-bar">
+            <span class="signal-rank">06</span>
+            <span class="signal-label">gaji UMK Subang 2025</span>
+            <div class="signal-track"><div class="signal-fill" style="width:55%;background:#888780;"></div></div>
+            <span class="signal-val">~55</span>
+            <span class="badge badge-stable">— Stabil</span>
+          </div>
+          <div class="signal-bar">
+            <span class="signal-rank">07</span>
+            <span class="signal-label">operator maintenance Cirebon</span>
+            <div class="signal-track"><div class="signal-fill" style="width:48%;background:#BA7517;"></div></div>
+            <span class="signal-val">~48</span>
+            <span class="badge badge-new">↑ Baru naik</span>
+          </div>
+          <div class="signal-bar">
+            <span class="signal-rank">08</span>
+            <span class="signal-label">loker safety officer Jawa Barat</span>
+            <div class="signal-track"><div class="signal-fill" style="width:42%;background:#888780;"></div></div>
+            <span class="signal-val">~42</span>
+            <span class="badge badge-stable">— Stabil</span>
+          </div>
+        </div>
+      </div>
+      <div id="tab-temporal" style="display:none;">
+        <div class="legend" style="margin-bottom:16px;">
+          <div class="legend-item"><div class="legend-dot" style="background:#3266AD;"></div> Loker Subang</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#1D9E75;"></div> Operator produksi</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#BA7517;"></div> Loker Cirebon pabrik</div>
+        </div>
+        <div class="chart-wrap" style="height:260px;">
+          <canvas id="trendChart" role="img" aria-label="Grafik tren pencarian 2024–2026 untuk tiga kata kunci utama">Estimasi indeks: loker Subang naik dari 72 ke 89, operator produksi 68 ke 83, loker Cirebon pabrik 35 ke 74.</canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: MAKRO -->
+<div class="section" id="makro">
+  <div class="section-head">
+    <span class="section-num">03</span>
+    <span class="section-title">Tren industri makro</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">PMI Manufaktur Indonesia — Jul 2024 hingga Jan 2026</span>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#D94F4F;"></div> Kontraksi (&lt;50)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#3266AD;"></div> Ekspansi (&gt;50)</div>
+        <div class="legend-item"><div class="legend-line"></div> Batas netral (50)</div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="chart-wrap" style="height:280px;">
+        <canvas id="industryChart" role="img" aria-label="Grafik batang PMI Manufaktur Indonesia Jul 2024 – Jan 2026">PMI bergerak dari kontraksi (48,9) ke ekspansi (52,6) antara Agustus 2024 dan Januari 2026.</canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: SINYAL -->
+<div class="section" id="sinyal">
+  <div class="section-head">
+    <span class="section-num">04</span>
+    <span class="section-title">Sinyal tren per topik</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="insight-grid">
+    <div class="insight-card">
+<div class="insight-icon ic-green">🏭</div>
+      <p class="insight-title">Ekspansi Cirebon</p>
+      <p class="insight-body">Volume pencarian "loker Cirebon pabrik" naik signifikan sejak pertengahan 2024, selaras dengan masuknya PT Chinli dan ekspansi Taekwang ke wilayah ini.</p>
+    </div>
+    <div class="insight-card">
+<div class="insight-icon ic-blue">⚙️</div>
+      <p class="insight-title">Operator produksi tetap #1</p>
+      <p class="insight-body">Pencarian "operator produksi" di Jawa Barat konsisten masuk 5 besar loker paling dicari. Taekwang adalah salah satu destinasi utama.</p>
+    </div>
+    <div class="insight-card">
+<div class="insight-icon ic-amber">👟</div>
+      <p class="insight-title">Paradoks industri sepatu</p>
+      <p class="insight-body">Ekspor tumbuh +11,8%, namun pasar domestik lesu. Taekwang (berorientasi ekspor Nike) justru lebih terlindungi dari tekanan pasar lokal.</p>
+    </div>
+    <div class="insight-card">
+<div class="insight-icon ic-blue">🎯</div>
+      <p class="insight-title">Tren skill-based hiring</p>
+      <p class="insight-body">Pencarian "loker K3/safety officer" dan "PPIC manufaktur" naik, mencerminkan kebutuhan akan SDM teknis spesifik, bukan hanya operator umum.</p>
+    </div>
+    <div class="insight-card">
+<div class="insight-icon ic-green">💹</div>
+      <p class="insight-title">UMK jadi faktor pencarian</p>
+      <p class="insight-body">"Gaji UMK Subang 2025" dan "UMK Cirebon" banyak dicari. Selisih UMK (Rp 3,5 jt vs Rp 2,68 jt) menjadi sinyal lokasi ekspansi strategis.</p>
+    </div>
+    <div class="insight-card">
+<div class="insight-icon ic-teal">💻</div>
+      <p class="insight-title">Digitalisasi rekrutmen</p>
+      <p class="insight-body">Traffic portal tkg.jobseeker.software meningkat — dibuktikan makin banyaknya artikel panduan "cara daftar Taekwang online" di berbagai platform.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: RISIKO -->
+<div class="section" id="risiko">
+  <div class="section-head">
+    <span class="section-num">05</span>
+    <span class="section-title">Peta risiko vs peluang</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="risk-cols">
+    <div class="risk-card risk-pos">
+      <div class="risk-head">
+        <div class="risk-head-dot risk-head-dot-pos"></div>
+        <span class="risk-head-label risk-head-label-pos">Potensi — tren positif</span>
+      </div>
+      <div class="risk-item"><div class="risk-item-dot" style="background:#2D6B0F;margin-top:7px;"></div><span class="risk-item-text-pos">Rekrutmen volume tinggi <strong>(90)</strong></span></div>
+      <div class="risk-item"><div class="risk-item-dot" style="background:#2D6B0F;margin-top:7px;"></div><span class="risk-item-text-pos">Ekspansi wilayah baru <strong>(85)</strong></span></div>
+      <div class="risk-item"><div class="risk-item-dot" style="background:#2D6B0F;margin-top:7px;"></div><span class="risk-item-text-pos">Diversifikasi posisi <strong>(75)</strong></span></div>
+    </div>
+    <div class="risk-card risk-neg">
+      <div class="risk-head">
+        <div class="risk-head-dot risk-head-dot-neg"></div>
+        <span class="risk-head-label risk-head-label-neg">Risiko — tren negatif</span>
+      </div>
+      <div class="risk-item"><div class="risk-item-dot" style="background:#993030;margin-top:7px;"></div><span class="risk-item-text-neg">Persaingan tenaga kerja <strong>(75)</strong></span></div>
+      <div class="risk-item"><div class="risk-item-dot" style="background:#993030;margin-top:7px;"></div><span class="risk-item-text-neg">Tekanan kenaikan UMK <strong>(70)</strong></span></div>
+      <div class="risk-item"><div class="risk-item-dot" style="background:#993030;margin-top:7px;"></div><span class="risk-item-text-neg">Volatilitas order ekspor <strong>(65)</strong></span></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Radar potensi vs risiko berdasarkan tren pencarian</span>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#3266AD;"></div> Potensi</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#D94F4F;"></div> Risiko</div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="chart-wrap" style="height:300px;">
+        <canvas id="radarChart" role="img" aria-label="Grafik radar potensi dan risiko berdasarkan tren pencarian Google">Potensi tertinggi: rekrutmen volume tinggi (90), ekspansi wilayah (85). Risiko tertinggi: persaingan tenaga kerja (75), tekanan UMK (70).</canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      Laporan analitik untuk <strong>PT TKG Taekwang Indonesia</strong> — Subang & Cirebon, Jawa Barat.<br>
+      Data bersumber dari estimasi Google Trends proxy, BPS 2025, dan data PMI Manufaktur Indonesia.
+    </div>
+    <div class="footer-right">Periode: 2024–2026</div>
+  </div>
+</footer>
+
+<script>
+/* ── TAB SWITCH ── */
+function switchTab(e, t) {
+  document.getElementById('tab-keyword').style.display = t === 'keyword' ? 'block' : 'none';
+  document.getElementById('tab-temporal').style.display = t === 'temporal' ? 'block' : 'none';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  if (t === 'temporal' && !window.trendBuilt) { buildTrend(); window.trendBuilt = true; }
+}
+
+/* ── TREND LINE CHART ── */
+function buildTrend() {
+  const labels = ['Jan 24','Mar 24','Mei 24','Jul 24','Sep 24','Nov 24','Jan 25','Mar 25','Mei 25','Jul 25','Sep 25','Nov 25','Jan 26','Mar 26'];
+  new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Loker Subang', data: [72,75,78,80,82,85,84,86,87,88,86,88,88,89], borderColor: '#3266AD', backgroundColor: 'rgba(50,102,173,0.06)', borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: '#3266AD', tension: 0.4, fill: true },
+        { label: 'Operator produksi', data: [68,70,72,74,76,78,80,78,80,81,82,82,82,83], borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.04)', borderWidth: 2, borderDash: [5,4], pointRadius: 3, pointBackgroundColor: '#1D9E75', tension: 0.4, fill: true },
+        { label: 'Loker Cirebon pabrik', data: [35,38,42,48,52,56,58,62,65,68,70,72,73,74], borderColor: '#BA7517', backgroundColor: 'rgba(186,117,23,0.05)', borderWidth: 2, borderDash: [2,3], pointRadius: 3, pointBackgroundColor: '#BA7517', tension: 0.4, fill: true },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#fff',
+          titleColor: '#1A1917',
+          bodyColor: '#6B6860',
+          borderColor: 'rgba(0,0,0,0.1)',
+          borderWidth: 1,
+          padding: 12,
+          boxPadding: 4,
+        }
+      },
+      scales: {
+y: { min: 30, max: 100, ticks: { font: { size: 11, family: "'Poppins', sans-serif" }, color: '#9E9C97', stepSize: 10 }, grid: { color: 'rgba(0,0,0,0.05)' }, border: { display: false } },
+        x: { ticks: { font: { size: 10, family: "'Poppins', sans-serif" }, maxRotation: 45, autoSkip: false, color: '#9E9C97' }, grid: { display: false }, border: { display: false } }
+      }
+    }
+  });
+}
+
+/* ── PMI BAR CHART ── */
+const pmiLabels = ['Jul 24','Agu 24','Sep 24','Okt 24','Nov 24','Des 24','Jan 25','Mar 25','Jun 25','Agu 25','Sep 25','Okt 25','Des 25','Jan 26'];
+const pmiData = [49.3,48.9,49.2,49.2,49.6,51.2,51.0,50.5,51.3,51.5,50.4,51.2,51.2,52.6];
+const pmiColors = pmiData.map(v => v >= 50 ? '#3266AD' : '#D94F4F');
+
+new Chart(document.getElementById('industryChart'), {
+  type: 'bar',
+  data: {
+    labels: pmiLabels,
+    datasets: [{
+      label: 'PMI Manufaktur',
+      data: pmiData,
+      backgroundColor: pmiColors,
+      borderRadius: 5,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#fff',
+        titleColor: '#1A1917',
+        bodyColor: '#6B6860',
+        borderColor: 'rgba(0,0,0,0.1)',
+        borderWidth: 1,
+        padding: 12,
+        callbacks: { label: ctx => ' PMI: ' + ctx.raw.toFixed(1) }
+      },
+      annotation: {}
+    },
+    scales: {
+y: {
+        min: 47, max: 54,
+        ticks: { font: { size: 11, family: "'Poppins', sans-serif" }, color: '#9E9C97', callback: v => v.toFixed(1) },
+        grid: { color: 'rgba(0,0,0,0.05)' },
+        border: { display: false }
+      },
+      x: {
+        ticks: { font: { size: 10, family: "'Poppins', sans-serif" }, maxRotation: 45, autoSkip: false, color: '#9E9C97' },
+        grid: { display: false }, border: { display: false }
+      }
+    }
+  }
+});
+
+/* ── RADAR CHART ── */
+new Chart(document.getElementById('radarChart'), {
+  type: 'radar',
+  data: {
+    labels: ['Rekrutmen\nvolume tinggi','Ekspansi\nwilayah baru','Diversifikasi\nposisi','Persaingan\ntenaga kerja','Tekanan\nkenaikan UMK','Volatilitas\norder ekspor'],
+    datasets: [
+      {
+        label: 'Potensi',
+        data: [90,85,75,45,40,35],
+        backgroundColor: 'rgba(50,102,173,0.12)',
+        borderColor: '#3266AD',
+        borderWidth: 2,
+        pointRadius: 5,
+        pointBackgroundColor: '#3266AD',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+      },
+      {
+        label: 'Risiko',
+        data: [30,40,30,75,70,65],
+        backgroundColor: 'rgba(217,79,79,0.10)',
+        borderColor: '#D94F4F',
+        borderWidth: 2,
+        borderDash: [5,4],
+        pointRadius: 5,
+        pointBackgroundColor: '#D94F4F',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#fff',
+        titleColor: '#1A1917',
+        bodyColor: '#6B6860',
+        borderColor: 'rgba(0,0,0,0.1)',
+        borderWidth: 1,
+        padding: 12,
+      }
+    },
+    scales: {
+      r: {
+        min: 0, max: 100,
+ticks: { font: { size: 10, family: "'Poppins', sans-serif" }, stepSize: 25, color: '#9E9C97', backdropColor: 'transparent' },
+        pointLabels: { font: { size: 11, family: "'Poppins', sans-serif" }, color: '#6B6860' },
+        grid: { color: 'rgba(0,0,0,0.07)' },
+        angleLines: { color: 'rgba(0,0,0,0.07)' }
+      }
+    }
+  }
+});
+
+/* ── SMOOTH SCROLL NAV ── */
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
